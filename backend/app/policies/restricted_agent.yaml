@@ -1,0 +1,48 @@
+name: "restricted_agent"
+description: "Zero-trust policy for untrusted prompts and high-risk environments with read-only access and strict DLP blocking"
+version: "1.0.0"
+is_active: false
+
+rules:
+  allowed_tools:
+    - "file_tool"
+  blocked_tools:
+    - "code_tool"
+    - "email_tool"
+    - "web_tool"
+
+  rate_limits:
+    max_tool_calls_per_turn: 3
+    max_input_length_chars: 4000
+
+  injection_defense:
+    strict_mode: true
+    confidence_threshold: 0.40
+    block_on_detection: true
+
+  dlp:
+    scan_inputs: true
+    scan_outputs: true
+    scan_tool_args: true
+    action_on_secrets: "BLOCK"
+    action_on_pii: "BLOCK"
+
+  taint_tracking:
+    enabled: true
+    enforce_taint_sinks: true
+    untrusted_sources:
+      - "file_tool"
+    critical_sinks:
+      - "file_tool"
+
+  parameter_constraints:
+    file_tool:
+      read_only: true
+      allowed_root_dir: "sandbox_data/public"
+      disallow_path_traversal: true
+      blocked_extensions:
+        - ".env"
+        - ".pem"
+        - ".key"
+        - ".json"
+        - ".yaml"

@@ -1,0 +1,59 @@
+name: "default"
+description: "Standard balanced protection policy for production LLM agents"
+version: "1.0.0"
+is_active: true
+
+rules:
+  allowed_tools:
+    - "email_tool"
+    - "web_tool"
+    - "file_tool"
+    - "code_tool"
+  blocked_tools: []
+
+  rate_limits:
+    max_tool_calls_per_turn: 10
+    max_input_length_chars: 16000
+
+  injection_defense:
+    strict_mode: false
+    confidence_threshold: 0.65
+    block_on_detection: true
+
+  dlp:
+    scan_inputs: true
+    scan_outputs: true
+    scan_tool_args: true
+    action_on_secrets: "REDACT"
+    action_on_pii: "REDACT"
+
+  taint_tracking:
+    enabled: true
+    enforce_taint_sinks: true
+    untrusted_sources:
+      - "web_tool"
+      - "email_tool"
+    critical_sinks:
+      - "code_tool"
+      - "email_tool"
+
+  parameter_constraints:
+    file_tool:
+      allowed_root_dir: "sandbox_data"
+      disallow_path_traversal: true
+      blocked_extensions:
+        - ".env"
+        - ".pem"
+        - ".key"
+        - ".bashrc"
+    web_tool:
+      block_internal_ips: true
+      blocked_schemes:
+        - "file"
+        - "gopher"
+        - "ftp"
+    email_tool:
+      blocked_recipient_domains:
+        - "tempmail.com"
+        - "guerrillamail.com"
+        - "mailinator.com"

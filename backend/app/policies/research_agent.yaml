@@ -1,0 +1,51 @@
+name: "research_agent"
+description: "Policy tailored for internet research agents with elevated web permissions and disabled execution/email sinks"
+version: "1.0.0"
+is_active: false
+
+rules:
+  allowed_tools:
+    - "web_tool"
+    - "file_tool"
+  blocked_tools:
+    - "code_tool"
+    - "email_tool"
+
+  rate_limits:
+    max_tool_calls_per_turn: 15
+    max_input_length_chars: 24000
+
+  injection_defense:
+    strict_mode: true
+    confidence_threshold: 0.55
+    block_on_detection: true
+
+  dlp:
+    scan_inputs: true
+    scan_outputs: true
+    scan_tool_args: true
+    action_on_secrets: "BLOCK"
+    action_on_pii: "REDACT"
+
+  taint_tracking:
+    enabled: true
+    enforce_taint_sinks: true
+    untrusted_sources:
+      - "web_tool"
+    critical_sinks:
+      - "file_tool"
+
+  parameter_constraints:
+    file_tool:
+      read_only: false
+      allowed_root_dir: "sandbox_data/research"
+      disallow_path_traversal: true
+      blocked_extensions:
+        - ".env"
+        - ".pem"
+        - ".key"
+    web_tool:
+      block_internal_ips: true
+      blocked_schemes:
+        - "file"
+        - "gopher"
