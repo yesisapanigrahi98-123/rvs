@@ -33,7 +33,7 @@ export const Sidebar = ({ activePage, setActivePage }) => {
       <div className="p-5 border-b border-slate-800/80 flex items-center space-x-3">
         <div className="relative group">
           <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-900 border border-cyan-500/50 shadow-glow-cyan flex items-center justify-center transition-transform group-hover:scale-105">
-            <img src="/logo.png" alt="SentinelFlow Logo" className="w-8 h-8 object-contain" />
+            <img src="/logo.png" alt="SentinelFlow Logo" className="w-8 h-8 object-contain" style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
           </div>
           <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-[#090d16] rounded-full"></span>
         </div>

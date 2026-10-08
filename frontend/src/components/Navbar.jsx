@@ -201,7 +201,7 @@ export const Navbar = ({ onOpenPolicyModal }) => {
           <div className="hidden sm:flex items-center space-x-2.5 pl-2 border-l border-slate-800">
             <div className="w-8 h-8 rounded-lg overflow-hidden border border-cyan-500/40 bg-slate-800 flex items-center justify-center">
               {user?.avatar ? (
-                <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               ) : (
                 <User className="w-4 h-4 text-cyan-400" />
               )}
